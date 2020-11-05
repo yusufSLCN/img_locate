@@ -3,8 +3,9 @@ import cv2 as cv
 import matplotlib.pyplot as plt
 import imutils
 
-#read images
+#read bigger image
 star_map = cv.imread('StarMap.png',0)
+#read smaller image
 smallStart = cv.imread('Small_area.png',0)
 
 #image that will be correlated
@@ -19,6 +20,7 @@ while degree < 360:
     res = cv.matchTemplate(star_map, small,eval('cv.TM_CCORR_NORMED'))
     min_val, max_val, min_loc, max_loc = cv.minMaxLoc(res)
     degree = degree + deltaAngle
+    #rotate image for next correlation
     small = imutils.rotate(smallStart, angle=degree)
     if max_val > global_max_val:
         global_max_val = max_val
@@ -39,7 +41,7 @@ def rotateAround(point, pivot, angle):
                     round((point[0] - pivot[0]) * sinTeta + (point[1] - pivot[1])*cosTeta + pivot[1]))
     return rotatedPoint
   
-#rotate horizotal orientation  
+#rotate horizotal oriented window
 rotated_top_left = rotateAround(top_left, center, -highestCorr[4])
 rotated_top_right = rotateAround(top_right, center, -highestCorr[4])
 rotated_bottom_left = rotateAround(bottom_left, center, -highestCorr[4])
